@@ -364,6 +364,7 @@ class bucket
         console.log "#{@name}: index loaded, initialized: #{@initialized}"
         if @initialized is false
             @cb_r()
+            console.log "#{@name}: intialized and ready called"
         @initialized = true
         console.log "#{@name}: retrieve changes from index loaded"
         @retrieve_changes()
