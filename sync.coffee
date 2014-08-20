@@ -806,13 +806,13 @@ class simperium
         @buckets[b_opts['n']] = b
         return b
 
-    on: (bucket, event, callback) =>
-        @buckets[bucket].on(event, callback)
+    on: (name, event, callback) =>
+        @buckets[name].on(event, callback)
 
     start: =>
         @stopped = false
-        for own name, bucket of @buckets
-            bucket.start()
+        for own name, b of @buckets
+            b.start()
 
     stop: =>
         @stopped = true
@@ -823,8 +823,8 @@ class simperium
         @sock.send(data)
 
     synced: =>
-        for own name, bucket of @buckets
-            if bucket.pending().length > 0
+        for own name, b of @buckets
+            if b.pending().length > 0
                 return false
         return true
 
@@ -841,14 +841,14 @@ class simperium
         @_sock_backoff = 3000
         @connected = true
         @_sock_hb_timer = setTimeout @_sock_hb_check, 20000
-        for own name, bucket of @buckets
-            if bucket.started
-                bucket.start()
+        for own name, b of @buckets
+            if b.started
+                b.start()
 
     _sock_closed: =>
         @connected = false
-        for own name, bucket of @buckets
-            bucket.authorized = false
+        for own name, b of @buckets
+            b.authorized = false
         console.log "simperium: sock js closed"
         if @_sock_backoff < 4000
             @_sock_backoff = @_sock_backoff + 1
